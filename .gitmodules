@@ -1,6 +1,6 @@
 [submodule "web-llm"]
 	path = web-llm
-	url = https://github.com/mlc-ai/web-llm.git
+	url = https://github.com/arpheno/web-llm.git
 [submodule "mlc-llm"]
 	path = mlc-llm
-	url = https://github.com/mlc-ai/mlc-llm.git
+	url = https://github.com/arpheno/mlc-llm.git
