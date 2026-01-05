@@ -1,0 +1,8 @@
+.DS_Store
+.vscode/
+.venv/
+emsdk/
+models/
+build/
+dist/
+node_modules/
