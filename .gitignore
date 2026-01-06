@@ -2,7 +2,16 @@
 .vscode/
 .venv/
 emsdk/
-models/
 build/
 dist/
 node_modules/
+downloads/
+
+# Ignore model weights (too large for GitHub)
+models/**/*.bin
+models/**/*.safetensors
+
+# But ensure we keep the WASM runtime and configs
+!models/**/*.wasm
+!models/**/*.json
+
