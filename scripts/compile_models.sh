@@ -38,8 +38,21 @@ fi
 # Clear PYTHONPATH to avoid conflicts with local source
 export PYTHONPATH=""
 
-# Set MLC_LLM_SOURCE_DIR so the compiler can find the WASM runtime
-export MLC_LLM_SOURCE_DIR="$MLC_LLM_DIR"
+# Source emsdk environment if available
+if [ -f "$ROOT_DIR/emsdk/emsdk_env.sh" ]; then
+    source "$ROOT_DIR/emsdk/emsdk_env.sh" > /dev/null
+fi
+
+# Find the installed mlc_llm package path to set MLC_LLM_SOURCE_DIR
+# This is crucial to match the installed runtime version and avoid duplicate symbols
+INSTALLED_MLC_LLM_PATH=$("$VENV_PYTHON" -c "import os, mlc_llm; print(os.path.dirname(mlc_llm.__file__))")
+if [ -z "$INSTALLED_MLC_LLM_PATH" ]; then
+    echo "WARNING: Could not find installed mlc_llm path. Fallback to local source."
+    export MLC_LLM_SOURCE_DIR="$MLC_LLM_DIR"
+else
+    echo "Using installed mlc_llm at: $INSTALLED_MLC_LLM_PATH"
+    export MLC_LLM_SOURCE_DIR="$INSTALLED_MLC_LLM_PATH"
+fi
 
 # Define a function to replace the command using the installed package
 mlc_llm() {
@@ -65,7 +78,7 @@ fi
 MODELS=(
     "Qwen/Qwen2.5-1.5B|Qwen2.5-1.5B|q4f16_1|LM|4096"
     "mistralai/Mistral-7B-v0.3|Mistral-7B-v0.3|q4f16_1|mistral_default|4096"
-    "google/gemma-2-9b|Gemma-2-9B|q4f32_1|gemma|4096"
+    "google/gemma-2-9b|Gemma-2-9B|q4f32_1|gemma_instruction|4096"
 )
 
 compile_model() {
